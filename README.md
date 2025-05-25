@@ -21,10 +21,6 @@ This `docker-compose` implementation includes:
 ├── logs/                   # Martini logs 
 ├── data/                   # Application data 
 ├── packages/               # Custom Martini packages
-├── postgresql/
-│   └── data/               # Persistent PostgreSQL data
-├── cassandra/
-│   └── data/               # Persistent Cassandra data
 ├── .env                    # Environment variables
 └── docker-compose.yml      # Stack configuration
 ````
@@ -107,7 +103,7 @@ By default, Martini Tracker uses the embedded **Nitrite** database. This is a li
 
    ```env
    MR_TRACKER_ENABLE_EMBEDDED_DATABASE=false
-   MR_TRACKER_DATABASE_NAME=cassandra
+   MR_TRACKER_DATABASE_NAME=cassandra-tracker
    ```
 
 2. Mount the Cassandra-specific `.dbxml` file into the `conf/db-pool/` directory.
@@ -119,7 +115,7 @@ By default, Martini Tracker uses the embedded **Nitrite** database. This is a li
 
    ```env
    MR_TRACKER_ENABLE_EMBEDDED_DATABASE=false
-   MR_TRACKER_DATABASE_NAME=dynamodb
+   MR_TRACKER_DATABASE_NAME=dynamodb-tracker
    MR_TRACKER_DYNAMODB_TABLE=your-tracker-table
    MR_TRACKER_DYNAMODB_STATE_TABLE=your-state-table
    MR_TRACKER_DYNAMODB_STATE_CONTENT_TABLE_NAME=your-state-content-table
