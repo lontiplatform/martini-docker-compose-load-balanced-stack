@@ -1,0 +1,23 @@
+<database>
+  <name>dynamodb-tracker</name>
+  <autoStart>true</autoStart>
+  <type>dynamodb</type>
+  <region>[region]</region>
+  <endpoint>[endpoint]</endpoint>
+  <authenticationProvider>STATIC</authenticationProvider>
+  <staticCredentialAuthentication>
+    <accessKeyId>[access_key_id]</accessKeyId>
+    <secretAccessKey>[secret_access_key]</secretAccessKey>
+  </staticCredentialAuthentication>
+  <connectionSettings>
+    <maxConcurrency>3</maxConcurrency>
+    <maxPendingConnectionAcquires>32</maxPendingConnectionAcquires>
+    <connectionTimeToLive>20000</connectionTimeToLive>
+    <readTimeout>20000</readTimeout>
+    <writeTimeout>20000</writeTimeout>
+    <connectionTimeout>20000</connectionTimeout>
+    <connectionAcquisitionTimeout>20000</connectionAcquisitionTimeout>
+    <connectionMaxIdleTime>20000</connectionMaxIdleTime>
+    <useIdleConnectionReaper>true</useIdleConnectionReaper>
+  </connectionSettings>
+</database>

@@ -1,5 +1,5 @@
 <database>
-  <name>tracker</name>
+  <name>cassandra-tracker</name>
   <autoStart>true</autoStart>
   <type>cassandra</type>
   <contactPoints>

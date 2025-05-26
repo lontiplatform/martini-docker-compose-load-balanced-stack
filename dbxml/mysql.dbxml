@@ -1,0 +1,29 @@
+<database>
+  <name>mysql</name>
+  <autoStart>true</autoStart>
+  <type>jdbc</type>
+  <url>jdbc:mysql://mysql:3306/your_db</url>
+  <xa>false</xa>
+  <driverClassName>com.mysql.cj.jdbc.Driver</driverClassName>
+  <username>your_mysql_user</username>
+  <password>your_mysql_password</password>
+  <acquireIncrement>1</acquireIncrement>
+  <acquisitionInterval>1</acquisitionInterval>
+  <acquisitionTimeout>30</acquisitionTimeout>
+  <allowLocalTransactions>true</allowLocalTransactions>
+  <autoCommit>true</autoCommit>
+  <applyTransactionTimeout>false</applyTransactionTimeout>
+  <automaticEnlistingEnabled>true</automaticEnlistingEnabled>
+  <deferConnectionRelease>false</deferConnectionRelease>
+  <enableJdbc4ConnectionTest>false</enableJdbc4ConnectionTest>
+  <ignoreRecoveryFailures>false</ignoreRecoveryFailures>
+  <isolationLevel>READ_COMMITTED</isolationLevel>
+  <maxIdleTime>60</maxIdleTime>
+  <minPoolSize>0</minPoolSize>
+  <maxPoolSize>5</maxPoolSize>
+  <preparedStatementCacheSize>0</preparedStatementCacheSize>
+  <shareTransactionConnections>false</shareTransactionConnections>
+  <twoPcOrderingPosition>0</twoPcOrderingPosition>
+  <useTmJoin>true</useTmJoin>
+  <loginTimeout>0</loginTimeout>
+</database>
