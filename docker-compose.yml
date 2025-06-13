@@ -1,0 +1,39 @@
+services:
+  martini:
+    image: lontiplatform/martini-server-runtime:latest
+    deploy:
+      replicas: 2                                       # Default number of Martini container to be provisioned
+      resources:
+        limits:                                         # Default memory and cpu allocation for each Martini container
+          memory: 4G
+          cpus: "2.0"
+    environment:
+      - MR_LICENSE=${MR_LICENSE}
+    volumes:
+      - ./martini_data/db_pool:/data/conf/db-pool
+      - ./martini_data/logs:/data/logs
+      - ./martini_data/packages:/data/packages
+    networks:
+      - martini_network
+
+  haproxy:
+    image: haproxy:2.9
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8404:8404"
+    deploy:
+      resources:
+        limits:                                          # Default memory and cpu allocation for HAProxy container
+          memory: 2G
+          cpus: "1.0"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./certs/test2.homemed.com.pem:/etc/haproxy/certs/haproxy.pem:ro
+      - ./certs/test2.homemed.com.key:/etc/haproxy/certs/haproxy.pem.key
+    networks:
+      - martini_network
+
+networks:
+  martini_network:
+    driver: bridge
