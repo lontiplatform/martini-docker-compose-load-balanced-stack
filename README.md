@@ -42,12 +42,12 @@ Run these commands in your terminal (replace `yourdomain.com`):
 
 **Private key:** 
 ```bash
-openssl genpkey -algorithm RSA -out yourdomain.com.key -pkeyopt rsa_keygen_bits:2048
+openssl genpkey -algorithm RSA -out certs/yourdomain.com.key -pkeyopt rsa_keygen_bits:2048
 ```
 
 **CSR:**
 ```bash
-openssl req -new -key test2.homemed.com.key -out test2.homemed.com.csr
+openssl req -new -key certs/yourdomain.com.key -out certs/yourdomain.com.csr
 ```
 
 * `yourdomain.com.key`: Your private key (keep this safe!)
