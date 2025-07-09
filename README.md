@@ -32,6 +32,118 @@ This repository provides a pre-configured [Docker Compose](https://docs.docker.c
 └── yourdomain.com.key
 ```
 
+## TLS Certificate Generation (for Production Domains)
+
+If you're using a real domain and need a trusted certificate from a Certificate Authority (e.g., GoDaddy, DigiCert, Let's Encrypt), follow these steps:
+
+### Step 1: Generate a Private Key and CSR
+
+Run these commands in your terminal (replace `yourdomain.com`):
+
+**Private key:** 
+```bash
+openssl genpkey -algorithm RSA -out yourdomain.com.key -pkeyopt rsa_keygen_bits:2048
+```
+
+**CSR:**
+```bash
+openssl req -new -key test2.homemed.com.key -out test2.homemed.com.csr
+```
+
+* `yourdomain.com.key`: Your private key (keep this safe!)
+* `yourdomain.com.csr`: Certificate Signing Request (send this to the CA)
+
+### Step 2: Buy and Submit CSR to a Certificate Authority
+
+* Go to your preferred CA (e.g., Sectigo, DigiCert, ZeroSSL)
+* Choose the certificate you want (e.g., single-domain, wildcard)
+* During purchase, you will be prompted to **upload the `.csr` file**
+* Complete domain validation steps (email, DNS, or HTTP-based)
+
+### Step 3: Receive Your Certificate from the CA
+
+You'll typically receive one or more of the following:
+
+* `yourdomain.com.crt` 
+* `ca_bundle.crt` or `intermediate.crt` 
+
+### Step 4: Create the `.pem` File for HAProxy
+
+HAProxy expects a `.pem` file that **includes your cert and the chain**, in the following order:
+
+```bash
+cat yourdomain.com.crt ca_bundle.crt > certs/yourdomain.com.pem
+```
+
+Make sure the resulting file `certs/yourdomain.com.pem` contains:
+
+1. Your certificate (`-----BEGIN CERTIFICATE-----`)
+2. The full chain of intermediate certificates
+3. (Optional) The root certificate, if provided
+
+Ensure the corresponding private key file (`certs/yourdomain.com.key`) matches the certificate.
+
+### Step 5: Mount Files into HAProxy Container
+
+Make sure your `docker-compose.yml` includes the volume mount:
+
+```yaml
+  haproxy:
+    ...
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./certs/yourdomain.com.pem:/usr/local/etc/haproxy/certs/yourdomain.com.pem:ro
+      - ./certs/yourdomain.com.key:/usr/local/etc/haproxy/certs/yourdomain.com.key:ro
+```
+
+> **HAProxy uses these files to terminate SSL on port 443.**
+
+## Self-Signed Certificate (for Development or Testing)
+
+If you're testing locally or don't need a trusted certificate, you can generate a **self-signed certificate** to use with HAProxy.
+
+> Browsers will show a **security warning** when using a self-signed cert. This is expected in development environments.
+
+### Step 1: Generate the Certificate and Key
+
+Run this command to generate a self-signed cert valid for 365 days:
+
+```bash
+openssl req -x509 -newkey rsa:2048 -nodes \
+  -keyout certs/localhost.key -out certs/localhost.pem -days 365 \
+  -subj "/C=US/ST=Dev/L=Local/O=LocalDev/CN=localhost"
+```
+
+This creates:
+
+* `certs/localhost.key`: Private key
+* `certs/localhost.pem`: Self-signed certificate
+
+### Step 2: Mount Files into HAProxy Container
+
+In your `docker-compose.yml`, make sure these files are mounted:
+
+```yaml
+  haproxy:
+    ...
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./certs/localhost.pem:/usr/local/etc/haproxy/certs/localhost.pem:ro
+      - ./certs/localhost.key:/usr/local/etc/haproxy/certs/localhost.key:ro
+```
+
+Update the HAProxy config to use `localhost.pem` and `localhost.key`.
+
+## Switching Between Certs
+
+You can easily swap between production and self-signed certs by:
+
+* Editing the filenames in `haproxy.cfg`
+* Updating the volume mounts in `docker-compose.yml`
+* Restarting the stack
+
+Use the production `.pem` and `.key` for real domains, and the `localhost.pem` and `localhost.key` when testing locally.
+
 ## Usage
 
 ### 1. Prerequisites
